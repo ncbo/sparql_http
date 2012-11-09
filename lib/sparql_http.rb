@@ -6,8 +6,8 @@ require 'json'
 require 'date'
 require 'net/http'
 
-require_relative "repository"
-require_relative "resultset/resultset"
-require_relative "store/http_store"
-require_relative "utils/mime"
-require_relative "utils/xsd"
+require_relative "sparql_http/repository"
+require_relative "sparql_http/resultset/resultset"
+require_relative "sparql_http/store/http_store"
+require_relative "sparql_http/utils/mime"
+require_relative "sparql_http/utils/xsd"
