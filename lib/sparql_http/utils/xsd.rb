@@ -25,7 +25,8 @@ module SparqlRd
     }
 
     def self.xsd_type_from_value(value)
-      if value.kind_of? String
+      #I do not know why this is needed
+      if value.kind_of? "".class
         :string
       elsif value.kind_of? Fixnum
         :integer
