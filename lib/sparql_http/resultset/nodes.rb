@@ -47,6 +47,9 @@ module SparqlRd
           "_:bNode#{@value}"
         end
       end
+      def skolem?
+        return ((not self.value.nil?) and self.value.include? ".well-known/genid")
+      end
     end
 
     class IRI < Node
