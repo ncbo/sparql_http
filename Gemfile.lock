@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    sparql_http (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -8,3 +13,4 @@ PLATFORMS
 
 DEPENDENCIES
   rake
+  sparql_http!

@@ -16,6 +16,9 @@ module SparqlRd
       end
 
       def create_binding_value(value,datatype,lang,type)
+        if value.nil? #optional
+          return nil
+        end
         #WARN: this controls fake skolem URIs used in ncbo/goo
         if value.include? ".well-known/genid"
           return BNode.new(value)
