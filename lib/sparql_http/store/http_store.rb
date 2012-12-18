@@ -65,7 +65,8 @@ module SparqlRd
 
         def delete_graph(graph)
           res = Utils::Http.request(@host,@port,
-                        Net::HTTP::Delete.new("/data/" + URI.escape(graph)))
+                        Net::HTTP::Delete.new("/data/" + CGI.escape(graph)))
+          binding.pry
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
@@ -77,11 +78,13 @@ module SparqlRd
           #this for files
         end
 
-        def append_in_graph(triples, graph, mime_type)
+        def append_in_graph(triples, graph, mime_type=nil)
           form = {}
           form["graph"] = graph
           form["data"] = triples
-          form['mime-type'] = mime_type        
+          if not mime_type.nil?
+            form['mime-type'] = mime_type        
+          end
           res = Utils::Http.post(@host,@port,"/data/",form)
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
