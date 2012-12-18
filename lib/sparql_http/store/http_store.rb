@@ -66,7 +66,6 @@ module SparqlRd
         def delete_graph(graph)
           res = Utils::Http.request(@host,@port,
                         Net::HTTP::Delete.new("/data/" + CGI.escape(graph)))
-          binding.pry
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
