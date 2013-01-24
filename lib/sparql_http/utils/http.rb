@@ -17,7 +17,7 @@ module SparqlRd
       end
 
       def self.camelize(str)
-        #no idea why I can't use the string camelize 
+        #no idea why I can't use the string camelize
         str.split('_').map {|w| w.capitalize}.join
       end
 
@@ -26,7 +26,6 @@ module SparqlRd
           parsed = URI.parse(uri)
           return (not parsed.scheme.nil?)
         rescue URI::InvalidURIError => e
-          binding.pry
           return false
         end
       end
