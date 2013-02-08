@@ -6,6 +6,7 @@ require 'json'
 require 'date'
 require 'multi_json'
 require 'oj'
+require 'rake'
 require 'pry'
 require 'net/http'
 

@@ -8,5 +8,6 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*.rb'] + ["lib/sparql_http.rb"]
   s.homepage = 'http://github.com/ncbo/sparql_http'
   s.add_dependency("multi_json")
+  s.add_dependency("rake")
   s.add_dependency("oj")
 end
