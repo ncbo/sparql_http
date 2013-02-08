@@ -4,6 +4,9 @@ require 'open-uri'
 require 'cgi'
 require 'json'
 require 'date'
+require 'multi_json'
+require 'oj'
+require 'pry'
 require 'net/http'
 
 require_relative "sparql_http/repository"
