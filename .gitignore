@@ -21,3 +21,5 @@ doc/
 
 # Mac artifacts
 **.DS_Store
+
+Gemfile.lock
