@@ -20,7 +20,7 @@ module SparqlRd
           return nil
         end
         #WARN: this controls fake skolem URIs used in ncbo/goo
-        if value.include? ".well-known/genid"
+        if type == "bnode"
           return BNode.new(value)
         end
 
@@ -32,21 +32,22 @@ module SparqlRd
         when "bnode"
           return BNode.new(value)
         else
-          raise UnknownSolutionFieldType 
+          raise UnknownSolutionFieldType
         end
       end
 
       def get(var)
         raise SparqlVariableNotFoundError,
           "Variable '%s' not found in var list %s"%[var,@vars.to_s] \
-            if @vars.index(var) == nil 
-        
+            if @vars.index(var) == nil
+
         return nil if @data[var.to_s] == nil
 
         var_field = @data[var.to_s]
         type = var_field["type"]
         if type == "uri"
-          if var_field["value"] and var_field["value"].index ".well-known/genid"
+          value = var_field["value"]
+          if value and value.index ".well-known/genid"
             type = "bnode"
           end
         end

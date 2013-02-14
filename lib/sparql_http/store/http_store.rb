@@ -19,7 +19,7 @@ module SparqlRd
           raise ArgumentError,
             "URI cannot be constructed. Parse error for '#{http_loc}'" \
               unless Utils::Http.valid_uri?(http_loc)
-          
+
           raise ArgumentError,
               "Params must contain the :resultset_class element" \
                 unless params[:resultset_class]
@@ -48,14 +48,21 @@ module SparqlRd
         def query(query, options = {})
           options["query"] = query
           query_string = get_query_string(options)
-          uri_query = "#{@query_path}?#{query_string}"
-          response = open(uri_query).read
+          #uri_query = "#{@query_path}?#{query_string}"
+          get = Net::HTTP::Get.new("/sparql/?#{query_string}")
+          response = Utils::Http.request(@host,@port,get)
+          response = response[1]
+          unless response.kind_of?(Net::HTTPSuccess)
+            e = Net::HTTPServerException.new("#{response.code_type} #{response.code} #{response.message}", response.body)
+            raise e
+          end
+          response = response.body
           @resultset_class.new(response,options)
         end
 
         def update(query, options = {})
           form = { "update" => query }
-          res = Utils::Http.post(@host,@port,"/update/",form)
+          res = Utils::Http.post(@host,@port,"/update/",form)[1]
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
@@ -65,14 +72,14 @@ module SparqlRd
 
         def delete_graph(graph)
           res = Utils::Http.request(@host,@port,
-                        Net::HTTP::Delete.new("/data/" + CGI.escape(graph)))
+                        Net::HTTP::Delete.new("/data/" + CGI.escape(graph)))[1]
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
             raise e
           end
         end
-      
+
         def upload_file(file,graph,mime_type)
           #this for files
         end
@@ -82,9 +89,9 @@ module SparqlRd
           form["graph"] = graph
           form["data"] = triples
           if not mime_type.nil?
-            form['mime-type'] = mime_type        
+            form['mime-type'] = mime_type
           end
-          res = Utils::Http.post(@host,@port,"/data/",form)
+          res = Utils::Http.post(@host,@port,"/data/",form)[1]
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
@@ -92,7 +99,7 @@ module SparqlRd
           end
         end
       end
-          
+
     end
   end
 end

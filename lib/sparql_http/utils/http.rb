@@ -7,7 +7,7 @@ module SparqlRd
     module Http
 
       def self.request(host, port, req)
-        Net::HTTP.start(host, port) { |http|http.request(req) }
+        return Net::HTTP.start(host, port) { |http| http.read_timeout= nil, http.request(req) }
       end
 
       def self.post(host, port, path, form_data)
