@@ -51,7 +51,6 @@ module SparqlRd
           #uri_query = "#{@query_path}?#{query_string}"
           get = Net::HTTP::Get.new("/sparql/?#{query_string}")
           response = Utils::Http.request(@host,@port,get)
-          response = response[1]
           unless response.kind_of?(Net::HTTPSuccess)
             e = Net::HTTPServerException.new("#{response.code_type} #{response.code} #{response.message}", response.body)
             raise e
@@ -62,7 +61,7 @@ module SparqlRd
 
         def update(query, options = {})
           form = { "update" => query }
-          res = Utils::Http.post(@host,@port,"/update/",form)[1]
+          res = Utils::Http.post(@host,@port,"/update/",form)
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
@@ -72,7 +71,7 @@ module SparqlRd
 
         def delete_graph(graph)
           res = Utils::Http.request(@host,@port,
-                        Net::HTTP::Delete.new("/data/" + CGI.escape(graph)))[1]
+                        Net::HTTP::Delete.new("/data/" + CGI.escape(graph)))
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
@@ -91,7 +90,7 @@ module SparqlRd
           if not mime_type.nil?
             form['mime-type'] = mime_type
           end
-          res = Utils::Http.post(@host,@port,"/data/",form)[1]
+          res = Utils::Http.post(@host,@port,"/data/",form)
           unless res.kind_of?(Net::HTTPSuccess)
             #TODO: handle this exception without looking the code error.
             e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
