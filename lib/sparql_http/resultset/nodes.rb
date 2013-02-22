@@ -30,6 +30,9 @@ module SparqlRd
         end
         false
       end
+      def ==(other)
+        return self.eql? other
+      end
     end
 
     class BNode < Node
@@ -66,7 +69,7 @@ module SparqlRd
 
     class Literal < Node
       attr_accessor :datatype
-      attr_accessor :lang 
+      attr_accessor :lang
 
       def initialize(value,datatype,lang)
         super(value, :literal)
@@ -100,5 +103,5 @@ module SparqlRd
       end
     end
 
-  end 
+  end
 end
