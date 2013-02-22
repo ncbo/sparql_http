@@ -4,6 +4,7 @@ module SparqlRd
   module Resultset
 
     class Node
+      include Comparable
       attr_accessor :value
       attr_reader :type
 
@@ -32,6 +33,15 @@ module SparqlRd
       end
       def ==(other)
         return self.eql? other
+      end
+      def <=>(other)
+        if self.value < other.value
+          -1
+        elsif self.value > other.value
+          1
+        else
+          0
+        end
       end
     end
 
