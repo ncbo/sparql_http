@@ -101,12 +101,16 @@ module SparqlRd
       end
 
       def eql?(other)
+        return false if other.nil?
         if other.type == @type
           return (other.value == @value and
           other.datatype == @datatype and
           other.lang == @lang)
         end
         false
+      end
+      def ==(other)
+        return self.eql? other
       end
 
       def hash
