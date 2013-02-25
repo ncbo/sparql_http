@@ -26,6 +26,7 @@ module SparqlRd
         return self.value.hash
       end
       def eql?(other)
+        return false if other.nil?
         if other.type == @type
           return other.value == @value
         end
