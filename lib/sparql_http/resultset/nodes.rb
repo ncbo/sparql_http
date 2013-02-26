@@ -116,6 +116,12 @@ module SparqlRd
       def hash
         return "#{@value}#{@datatype}#{@lang}".hash
       end
+
+      def to_turtle
+        return "\"#{@value}\"#{@lang}" if !@lang.nil?
+        return "\"#{@value}\"^^<#{@datatype}>" if !@datatype.nil?
+        return "\"#{@value}\""
+      end
     end
 
   end
