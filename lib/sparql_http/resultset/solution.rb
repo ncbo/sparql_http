@@ -28,7 +28,7 @@ module SparqlRd
         when "uri"
           return IRI.new(value)
         when "literal"
-          return Literal.new(value,datatype,lang)
+          return Resultset.get_literal_instance(value,datatype,lang)
         when "bnode"
           return BNode.new(value)
         else

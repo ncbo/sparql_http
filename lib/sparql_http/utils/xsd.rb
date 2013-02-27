@@ -25,7 +25,6 @@ module SparqlRd
     }
 
     def self.xsd_type_from_value(value)
-      #I do not know why this is needed
       if value.kind_of? "".class
         :string
       elsif value.kind_of? Fixnum
@@ -41,7 +40,7 @@ module SparqlRd
       end
     end
 
-        
+
     def self.xsd_string_from_value(value, type)
       case type
       when :date, :date_time
@@ -72,7 +71,7 @@ module SparqlRd
           when XSD_TYPES[:double]
             value.to_f
           else
-            raise UnsuportedXSDType, "#{datatype}" 
+            raise UnsuportedXSDType, "#{datatype}"
           end
         rescue ArgumentError => parse_error
           raise ArgumentError,
@@ -80,10 +79,11 @@ module SparqlRd
               message #{parse_error.message}'"
         end
       end
-      
+
       def self.types
         XSD_TYPES
       end
+
     end
   end
 end

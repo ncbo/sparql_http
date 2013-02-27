@@ -27,6 +27,9 @@ module SparqlRd
       end
       def eql?(other)
         return false if other.nil?
+        if !other.kind_of? Node
+          return self.value == other
+        end
         if other.type == @type
           return other.value == @value
         end
@@ -43,6 +46,9 @@ module SparqlRd
         else
           0
         end
+      end
+      def to_s
+        return value
       end
     end
 
@@ -81,27 +87,30 @@ module SparqlRd
     class Literal < Node
       attr_accessor :datatype
       attr_accessor :lang
+      attr_accessor :parsed_value
 
-      def initialize(value,datatype,lang)
+      def initialize(value,parsed_value,datatype,lang)
         super(value, :literal)
         @value = value
         @datatype = datatype
         @lang = lang #lang not handled now.
-        @parsed_value = nil #on demand
-      end
-
-      def parsed_value
-        return @object_value if @object_value
-        @object_value = Utils::Xsd.parse_literal_value(@value,@datatype,@lang)
+        @parsed_value = parsed_value
       end
 
       def to_s
-        v = parsed_value
+        return @value
+      end
+
+      def inspect
+        v = @parsed_value
         ["'",v.to_s,"':",v.class.to_s].join
       end
 
       def eql?(other)
         return false if other.nil?
+        if !other.kind_of? Literal
+          return @parsed_value == other
+        end
         if other.type == @type
           return (other.value == @value and
           other.datatype == @datatype and
@@ -124,5 +133,104 @@ module SparqlRd
       end
     end
 
+    class IntegerLiteral < Literal
+      def initialize(parsed_value)
+        super(parsed_value.to_s,parsed_value,Utils::Xsd::XSD_TYPES[:integer],nil)
+      end
+      def <=>(other)
+        other = other.parsed_value if other.instance_of? IntegerLiteral
+        if self.parsed_value < other
+          -1
+        elsif self.parsed_value > other
+          1
+        else
+          0
+        end
+      end
+      def to_i
+        return parsed_value
+      end
+    end
+    class DatetimeLiteral < Literal
+      def initialize(value,parsed_value)
+        super(value,parsed_value,Utils::Xsd::XSD_TYPES[:date_time],nil)
+      end
+      def <=>(other)
+        other = other.parsed_value if other.instance_of? DatetimeLiteral
+        if self.parsed_value < other
+          -1
+        elsif self.parsed_value > other
+          1
+        else
+          0
+        end
+      end
+    end
+    class StringLiteral < Literal
+      def initialize(value,lang=nil)
+        super(value,value,Utils::Xsd::XSD_TYPES[:string],lang)
+      end
+      def <=>(other)
+        other = other.parsed_value if other.instance_of? StringLiteral
+        if self.parsed_value < other
+          -1
+        elsif self.parsed_value > other
+          1
+        else
+          0
+        end
+      end
+      def +(other)
+        other = other.value if other.instance_of? StringLiteral
+        return StringLiteral.new (self.value + other)
+      end
+      def =~(regex)
+        return self.value =~ regex
+      end
+      def gsub(*arg,&block)
+        return self.value.gsub(*arg,&block)
+      end
+    end
+    class BooleanLiteral < Literal
+      def initialize(value,parsed_value)
+        super(value,parsed_value,Utils::Xsd::XSD_TYPES[:boolean],nil)
+      end
+    end
+
+    def self.get_literal_from_object(object_value,lang=nil)
+      return object_value if object_value.kind_of? Node
+      if (object_value.instance_of? String) or lang
+        return StringLiteral.new(object_value, lang)
+      end
+      if object_value.instance_of? Fixnum
+        return IntegerLiteral.new(object_value)
+      end
+      if object_value.instance_of? DateTime
+        return DatetimeLiteral.new(object_value.xmlschema, object_value)
+      end
+      if (object_value.instance_of? TrueClass) or (object_value.instance_of? FalseClass)
+        return BooleanLiteral.new(object_value.to_s, object_value)
+      end
+      raise ArgumentError,"Unknown datatype #{object_value.class}"
+      #return Literal.new(object_value.to_s, object_value, nil, nil)
+    end
+
+    def self.get_literal_instance(value,datatype,lang)
+      object_value = Utils::Xsd.parse_literal_value(value,datatype,lang)
+      if object_value.instance_of? String
+        return StringLiteral.new(value, lang)
+      end
+      if object_value.instance_of? Fixnum
+        return IntegerLiteral.new(object_value)
+      end
+      if object_value.instance_of? DateTime
+        return DatetimeLiteral.new(value, object_value)
+      end
+      if (object_value.instance_of? TrueClass) or (object_value.instance_of? FalseClass)
+        return BooleanLiteral.new(value, object_value)
+      end
+      raise ArgumentError,"Unknown datatype #{datatype}"
+      #return Literal.new(value, object_value, datatype, lang)
+    end
   end
 end
