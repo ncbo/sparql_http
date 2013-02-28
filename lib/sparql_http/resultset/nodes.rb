@@ -150,6 +150,10 @@ module SparqlRd
       def to_i
         return parsed_value
       end
+      def -(other)
+        other = other.parsed_value if other.instance_of? IntegerLiteral
+        return IntegerLiteral.new (self.parsed_value - other)
+      end
     end
     class DatetimeLiteral < Literal
       def initialize(value,parsed_value)
