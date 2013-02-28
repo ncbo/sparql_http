@@ -127,9 +127,9 @@ module SparqlRd
       end
 
       def to_turtle
-        return "\"#{@value}\"#{@lang}" if !@lang.nil?
-        return "\"#{@value}\"^^<#{@datatype}>" if !@datatype.nil?
-        return "\"#{@value}\""
+        return "\"\"\"#{@value}\"\"\"#{@lang}" if !@lang.nil?
+        return "\"\"\"#{@value}\"\"\"^^<#{@datatype}>" if !@datatype.nil?
+        return "\"\"\"#{@value}\"\"\""
       end
     end
 
