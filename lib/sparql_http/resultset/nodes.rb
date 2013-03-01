@@ -199,6 +199,9 @@ module SparqlRd
       def initialize(value,parsed_value)
         super(value,parsed_value,Utils::Xsd::XSD_TYPES[:boolean],nil)
       end
+      def !
+        return !self.parsed_value
+      end
     end
 
     def self.get_literal_from_object(object_value,lang=nil)
