@@ -11,7 +11,7 @@ class TestQuery < TestCase
 
   def count_test_graph
     q = <<eos
-SELECT (count(?s) as ?c) WHERE { 
+SELECT (count(?s) as ?c) WHERE {
   GRAPH <#{test_graph}> {
     ?s ?p ?o
   }
@@ -100,15 +100,15 @@ eos
     assert_equal count_test_graph, 0
 
     update = <<eos
-    INSERT DATA { 
+    INSERT DATA {
 GRAPH <#{test_graph}> {
- <https://github.com/ncbo/sparqlrd/subject> <https://github.com/ncbo/sparqlrd/has> "cccc"; 
-                  <https://github.com/ncbo/sparqlrd/email> "bbbb"; 
+ <https://github.com/ncbo/sparqlrd/subject> <https://github.com/ncbo/sparqlrd/has> "cccc";
+                  <https://github.com/ncbo/sparqlrd/email> "bbbb";
                   <https://github.com/ncbo/sparqlrd/other> [
         <https://github.com/ncbo/sparqlrd/cccc1> <https://github.com/ncbo/sparqlrd/dddd1>;
         <https://github.com/ncbo/sparqlrd/cccc2> <https://github.com/ncbo/sparqlrd/dddd2>;
         <https://github.com/ncbo/sparqlrd/cccc3> <https://github.com/ncbo/sparqlrd/dddd3>;
-                 ] . } 
+                 ] . }
 }
 eos
     @epr.update(update)
@@ -123,9 +123,9 @@ eos
     assert_equal count_test_graph, 0
 
     update = <<eos
-    INSERT DATA { 
+    INSERT DATA {
 GRAPH <#{test_graph}> {
- <https://github.com/ncbo/sparqlrd/subject> SOME INVALID DATA . 
+ <https://github.com/ncbo/sparqlrd/subject> SOME INVALID DATA .
 }
 eos
     begin
@@ -171,5 +171,7 @@ eos
     @epr.delete_graph(test_graph)
     assert_equal count_test_graph, 0
   end
-
+  def test_literal_cmp
+    binding.pry
+  end
  end

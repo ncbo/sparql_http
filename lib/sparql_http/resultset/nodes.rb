@@ -202,6 +202,26 @@ module SparqlRd
       def !
         return !self.parsed_value
       end
+      def &(other)
+        other = other.value if other.instance_of? BooleanLiteral
+        return self.parsed_value & other
+      end
+      def |(other)
+        other = other.value if other.instance_of? BooleanLiteral
+        return self.parsed_value | other
+      end
+      def ^(other)
+        other = other.value if other.instance_of? BooleanLiteral
+        return self.parsed_value ^ other
+      end
+      def eql?(other)
+        other = other.value if other.instance_of? BooleanLiteral
+        return self.parsed_value ^ other
+      end
+      def ==(other)
+        other = other.value if other.instance_of? BooleanLiteral
+        return self.parsed_value ^ other
+      end
     end
 
     def self.get_literal_from_object(object_value,lang=nil)
