@@ -21,7 +21,8 @@ module SparqlRd
       :date => self.XSD_NS + "dateTime",
       :date_time => self.XSD_NS + "dateTime",
       :xml_literal => self.XSD_NS + "XMLLiteral",
-      :boolean =>  self.XSD_NS + "boolean"
+      :boolean =>  self.XSD_NS + "boolean",
+      :any_uri =>  self.XSD_NS + "anyURI"
     }
 
     def self.xsd_type_from_value(value)
@@ -70,6 +71,8 @@ module SparqlRd
             value.to_f
           when XSD_TYPES[:double]
             value.to_f
+          when XSD_TYPES[:any_uri]
+            value
           else
             raise UnsuportedXSDType, "#{datatype}"
           end
