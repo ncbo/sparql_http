@@ -25,12 +25,7 @@ module SparqlRd
       end
 
       def self.valid_uri?(uri)
-        begin
-          parsed = URI.parse(uri)
-          return (not parsed.scheme.nil?)
-        rescue URI::InvalidURIError => e
-          return false
-        end
+        return (uri =~ URI::regexp) == 0
       end
 
       def self.sparql_http_loc(host, port)
