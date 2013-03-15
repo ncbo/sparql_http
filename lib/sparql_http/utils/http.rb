@@ -19,6 +19,23 @@ module SparqlRd
         self.request(host, port, req)
       end
 
+      def self.put_file(host, port, path, file_path,mime_type=nil)
+        header = { "Content-Length" => FileTest.size(file_path).to_s }
+        header["Content-Type"] = mime_type unless mime_type.nil?
+        req = Net::HTTP::Put.new(path, header)
+        resp = nil
+        begin
+          f = File.open(file_path,"r")
+          req.body_stream = f
+          resp = self.request(host, port, req)
+        rescue Exception => e
+          f.close()
+          raise e
+        end
+        f.close()
+        return resp
+      end
+
       def self.camelize(str)
         #no idea why I can't use the string camelize
         str.split('_').map {|w| w.capitalize}.join

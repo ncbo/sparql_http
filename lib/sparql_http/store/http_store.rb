@@ -83,6 +83,15 @@ module SparqlRd
           #this for files
         end
 
+        def put_file_in_graph(triples_file_path, graph,mime_type=nil)
+          res = Utils::Http.put_file(@host,@port,"/data/#{graph}",triples_file_path, mime_type)
+          unless res.kind_of?(Net::HTTPSuccess)
+            #TODO: handle this exception without looking the code error.
+            e = Net::HTTPServerException.new("#{res.code_type} #{res.code} #{res.message}", res.body)
+            raise e
+          end
+        end
+
         def append_in_graph(triples, graph, mime_type=nil)
           form = {}
           form["graph"] = graph
