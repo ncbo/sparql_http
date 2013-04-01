@@ -48,7 +48,7 @@ module SparqlRd
         end
       end
       def to_s
-        return value
+        return value.to_s
       end
       def inspect
         ["'",value,"':",self.class.to_s].join
