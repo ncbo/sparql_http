@@ -50,14 +50,14 @@ module SparqlRd
       def to_s
         return value
       end
+      def inspect
+        ["'",value,"':",self.class.to_s].join
+      end
     end
 
     class BNode < Node
       def initialize(value)
         super(value,:bnode)
-      end
-      def to_s
-        ["'",value,"':",self.class.to_s].join
       end
       def to_turtle
         #TODO: this test is not safe
@@ -76,7 +76,7 @@ module SparqlRd
       def initialize(value)
         super(value,:iri)
       end
-      def to_s
+      def inspect
         ["'",@value,"':",self.class.to_s].join
       end
       def to_turtle
@@ -95,10 +95,6 @@ module SparqlRd
         @datatype = datatype
         @lang = lang #lang not handled now.
         @parsed_value = parsed_value
-      end
-
-      def to_s
-        return @value
       end
 
       def inspect
