@@ -190,6 +190,12 @@ module SparqlRd
       def gsub(*arg,&block)
         return self.value.gsub(*arg,&block)
       end
+      def encoding
+        return self.value.encoding
+      end
+      def force_encoding(encoding)
+        return self.value.force_encoding(encoding)
+      end
     end
     class BooleanLiteral < Literal
       def initialize(value,parsed_value)
