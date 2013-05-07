@@ -74,7 +74,7 @@ module SparqlRd
           when XSD_TYPES[:any_uri]
             value
           else
-            raise UnsuportedXSDType, "#{datatype}"
+            value
           end
         rescue ArgumentError => parse_error
           raise ArgumentError,
